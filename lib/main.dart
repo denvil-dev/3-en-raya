@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_basic/screens/loginscreen.dart';
 
 void main() => runApp(const MyApp());
+String? name = "admin";
+String? password = "admin";
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -10,12 +13,31 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: '3 en Raya',
-      theme: ThemeData(primarySwatch: Colors.deepPurple),
-      home: const TicTacToePage(),
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(color: Colors.white),
+          bodyMedium: TextStyle(color: Colors.white),
+          bodySmall: TextStyle(color: Colors.white),
+          titleLarge: TextStyle(color: Colors.white),
+          titleMedium: TextStyle(color: Colors.white),
+          titleSmall: TextStyle(color: Colors.white),
+          labelLarge: TextStyle(color: Colors.white),
+          labelMedium: TextStyle(color: Colors.white),
+          labelSmall: TextStyle(color: Colors.white),
+        ),
+        scaffoldBackgroundColor: const Color.fromARGB(255, 0, 0, 0),
+      ),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const Loginscreen(),
+        '/game': (context) => const TicTacToePage(),
+      },
     );
   }
 }
 
+// ================= JUEGO 3 EN RAYA =================
 class TicTacToePage extends StatefulWidget {
   const TicTacToePage({super.key});
 
@@ -24,10 +46,9 @@ class TicTacToePage extends StatefulWidget {
 }
 
 class _TicTacToePageState extends State<TicTacToePage> {
-  // Tablero de 9 casillas: "" = vacío, "X" o "O"
   final List<String> _board = List.filled(9, '');
   String _currentPlayer = 'X';
-  String? _winner; // 'X', 'O' o 'Empate' (draw)
+  String? _winner;
   int _scoreX = 0;
   int _scoreO = 0;
 
@@ -51,7 +72,6 @@ class _TicTacToePageState extends State<TicTacToePage> {
       if (_winner == null) {
         _currentPlayer = _currentPlayer == 'X' ? 'O' : 'X';
       } else {
-        // Actualizar puntuación
         if (_winner == 'X')
           _scoreX++;
         else if (_winner == 'O')
@@ -72,7 +92,6 @@ class _TicTacToePageState extends State<TicTacToePage> {
         return;
       }
     }
-
     if (!_board.contains('')) {
       _winner = 'Empate';
     }
@@ -131,16 +150,21 @@ class _TicTacToePageState extends State<TicTacToePage> {
       onTap: () => _handleTap(index),
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.black26),
-          color: _board[index] == '' ? Colors.transparent : Colors.white,
+          border: Border.all(color: const Color.fromARGB(255, 255, 255, 255)),
+          color: _board[index] == ''
+              ? const Color.fromARGB(0, 255, 255, 255)
+              : const Color.fromARGB(255, 0, 0, 0),
         ),
         child: Center(
           child: AnimatedDefaultTextStyle(
             duration: const Duration(milliseconds: 200),
+
             style: TextStyle(
               fontSize: 48,
               fontWeight: FontWeight.bold,
-              color: _board[index] == 'X' ? Colors.deepPurple : Colors.teal,
+              color: _board[index] == 'X'
+                  ? const Color.fromARGB(255, 255, 0, 0)
+                  : const Color.fromARGB(255, 0, 94, 255),
             ),
             child: Text(_board[index]),
           ),
@@ -158,13 +182,22 @@ class _TicTacToePageState extends State<TicTacToePage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, "/");
+              },
+              child: Text("Regresar"),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Turno actual', style: TextStyle(fontSize: 14)),
+                    const Text(
+                      'Turno actual',
+                      style: TextStyle(fontSize: 14, color: Colors.white),
+                    ),
                     const SizedBox(height: 6),
                     Row(
                       children: [
@@ -173,6 +206,7 @@ class _TicTacToePageState extends State<TicTacToePage> {
                           style: const TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -187,9 +221,12 @@ class _TicTacToePageState extends State<TicTacToePage> {
                       children: [
                         const Text(
                           'X',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
-                        Text('$_scoreX'),
+                        Text('$_scoreX', style: TextStyle(color: Colors.white)),
                       ],
                     ),
                     const SizedBox(width: 16),
@@ -197,9 +234,12 @@ class _TicTacToePageState extends State<TicTacToePage> {
                       children: [
                         const Text(
                           'O',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
-                        Text('$_scoreO'),
+                        Text('$_scoreO', style: TextStyle(color: Colors.white)),
                       ],
                     ),
                   ],
@@ -239,6 +279,7 @@ class _TicTacToePageState extends State<TicTacToePage> {
             const SizedBox(height: 8),
             const Text(
               'Toca una casilla para jugar. Dos jugadores en el mismo dispositivo.',
+              style: TextStyle(fontSize: 12, color: Colors.white),
             ),
           ],
         ),
